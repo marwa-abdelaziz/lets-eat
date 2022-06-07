@@ -17,7 +17,27 @@ const Home = () => {
     color: theme.palette.text.secondary,
   }));
 
-  
+  const categories = "restaurants";
+  const location = "NYC";
+  const term = "";
+
+  const url = `https://cors-anywhere.herokuapp.com/api.yelp.com/v3/businesses/search?location=${location}&categories=${categories}`;
+  const fetchRestaurants = async () => {
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${Token}`, Origin: "example.com" },
+      });
+      const jsonResponse = await response.json();
+      console.log(jsonResponse);
+
+      //setTours(jsonResponse);np
+    } catch {
+      console.log(Error);
+    }
+  };
+  useEffect(() => {
+    fetchRestaurants();
+  }, []);
   return (
     <div>
       <Grid container spacing={2}>
