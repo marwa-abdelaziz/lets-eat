@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Token from "./Config";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -30,16 +31,12 @@ const darkTheme = createTheme({
 });
 
 const Business = () => {
-  const Image =
-    "https://s3-media3.fl.yelpcdn.com/bphoto/54oS76ZQyrhtkwmbbGpadg/o.jpg";
+  const params = useParams();
+  const id = params.id;
+  console.log(params.id);
+  //const Image ="https://s3-media3.fl.yelpcdn.com/bphoto/54oS76ZQyrhtkwmbbGpadg/o.jpg";
 
-  const styles = {
-    paperContainer: {
-      backgroundImage: `url(${Image})`,
-      backgroundRepeat: "no-repeat",
-      backgroundSize: "cover",
-    },
-  };
+ 
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -66,8 +63,9 @@ const Business = () => {
   };
 
   const getTime = (t) => t.substring(0, 2) + ":" + t.substring(2, 4);
-  const id = "vu6PlPyKptsT6oEq50qOzA";
+//   let id = "vu6PlPyKptsT6oEq50qOzA";
   const url = `https://yelp-cors.herokuapp.com/api.yelp.com/v3/businesses/${id}`;
+  console.log(url);
   const fetchRestaurants = async () => {
     try {
       const response = await fetch(url, {
@@ -75,7 +73,10 @@ const Business = () => {
       });
       const jsonResponse = await response.json();
       setBusinessInfo(jsonResponse);
-      setHours(jsonResponse.hours);
+      console.log(jsonResponse);
+      if (jsonResponse.hours){
+          setHours(jsonResponse.hours);
+      }
       setRate(jsonResponse.rating);
       setPrice(jsonResponse.price);
       setPosition([
@@ -89,31 +90,9 @@ const Business = () => {
   };
   useEffect(() => {
     fetchRestaurants();
-  }, []);
+  }, [id]);
 
-  //   const fetchRestaurants = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "https://gist.githubusercontent.com/devguyio/69427d4b7111b3929c51880c66729f6f/raw/58329bca195e0800ab0a397f4f21cba4fea34e92/yelpbusiness.json"
-  //       );
-  //       const jsonResponse = await response.json();
-  //       //console.log(jsonResponse);
-  //       setBusinessInfo(jsonResponse);
-  //       setHours(jsonResponse.hours);
-  //       setRate(jsonResponse.rating);
-  //       setPrice(jsonResponse.price);
-  //       setPosition([
-  //         jsonResponse.coordinates.latitude,
-  //         jsonResponse.coordinates.longitude,
-  //       ]);
-  //       setDisplayAddress(jsonResponse.location.display_address)
-  //     } catch {
-  //       console.log(Error);
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     fetchRestaurants();
-  //   }, []);
+  
 
   const getpriceRange = (price) => {
     let content = [];
@@ -126,6 +105,14 @@ const Business = () => {
       );
     }
     return content;
+  };
+  const image = businessInfo.image_url ;
+  const styles = {
+    paperContainer: {
+      backgroundImage: `url(${image})`,
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+    },
   };
 
   return (
